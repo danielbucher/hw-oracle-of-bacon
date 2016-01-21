@@ -7,37 +7,49 @@ require 'rspec/collection_matchers'
 
 describe OracleOfBacon do
   before(:all) { FakeWeb.allow_net_connect = false }
-  describe 'instance', :pending => true do
+
+  describe 'instance' do
     before(:each) { @orb = OracleOfBacon.new('fake_api_key') }
+
     describe 'when new' do
       subject { @orb }
+
       it { should_not be_valid }
     end
+
     describe 'when only From is specified' do
       subject { @orb.from = 'Carrie Fisher' ; @orb }
+
       it { should be_valid }
       its(:from) { should == 'Carrie Fisher' }
       its(:to)   { should == 'Kevin Bacon' }
     end
+
     describe 'when only To is specified' do
       subject { @orb.to = 'Ian McKellen' ; @orb }
+
       it { should be_valid }
       its(:from) { should == 'Kevin Bacon' }
       its(:to)   { should == 'Ian McKellen'}
     end
+
     describe 'when From and To are both specified' do
       context 'and distinct' do
         subject { @orb.to = 'Ian McKellen' ; @orb.from = 'Carrie Fisher' ; @orb }
+
         it { should be_valid }
         its(:from) { should == 'Carrie Fisher' }
         its(:to)   { should == 'Ian McKellen'  }
       end
+
       context 'and the same' do
         subject {  @orb.to = @orb.from = 'Ian McKellen' ; @orb }
+
         it { should_not be_valid }
       end
     end
   end
+
   describe 'parsing XML response', :pending => true do
     describe 'for unauthorized access/invalid API key' do
       subject { OracleOfBacon::Response.new(File.read 'spec/unauthorized_access.xml') }
@@ -69,6 +81,7 @@ describe OracleOfBacon do
       its(:data) { should match /unknown/i }
     end
   end
+
   describe 'constructing URI', :pending => true do
     subject do
       oob = OracleOfBacon.new('fake_key')
@@ -81,6 +94,7 @@ describe OracleOfBacon do
     it { should match /b=George\+Clooney/ }
     it { should match /a=3%252\+%22a/ }
   end
+
   describe 'service connection', :pending => true do
     before(:each) do
       @oob = OracleOfBacon.new
@@ -101,4 +115,3 @@ describe OracleOfBacon do
   end
 
 end
-      
