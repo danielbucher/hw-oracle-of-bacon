@@ -25,14 +25,8 @@ class OracleOfBacon
 
   def initialize(api_key='')
     @api_key = api_key
-  end
-
-  def to
-    @to ||= 'Kevin Bacon'
-  end
-
-  def from
-    @from ||= 'Kevin Bacon'
+    @to = 'Kevin Bacon'
+    @from = 'Kevin Bacon'
   end
 
   def find_connections
@@ -45,7 +39,11 @@ class OracleOfBacon
       # convert all of these into a generic OracleOfBacon::NetworkError,
       #  but keep the original error message
       # your code here
+
+      raise OracleOfBacon::NetworkError, e.message
     end
+
+    OracleOfBacon::Response.new(xml)
     # your code here: create the OracleOfBacon::Response object
   end
 
