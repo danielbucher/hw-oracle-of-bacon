@@ -50,33 +50,42 @@ describe OracleOfBacon do
     end
   end
 
-  describe 'parsing XML response', :pending => true do
+  describe 'parsing XML response' do
     describe 'for unauthorized access/invalid API key' do
       subject { OracleOfBacon::Response.new(File.read 'spec/unauthorized_access.xml') }
+
       its(:type) { should == :error }
       its(:data) { should == 'Unauthorized access' }
     end
+
     describe 'for a normal match' do
       subject { OracleOfBacon::Response.new(File.read 'spec/graph_example.xml') }
+
       its(:type) { should == :graph }
       its(:data) { should == ['Carrie Fisher', 'Under the Rainbow (1981)',
                               'Chevy Chase', 'Doogal (2006)', 'Ian McKellen'] }
     end
+
     describe 'for a normal match (backup)' do
       subject { OracleOfBacon::Response.new(File.read 'spec/graph_example2.xml') }
+
       its(:type) { should == :graph }
       its(:data) { should == ["Ian McKellen", "Doogal (2006)", "Kevin Smith (I)",
                               "Fanboys (2009)", "Carrie Fisher"] }
     end
+
     describe 'for a spellcheck match' do
       subject { OracleOfBacon::Response.new(File.read 'spec/spellcheck_example.xml') }
+
       its(:type) { should == :spellcheck }
       its(:data) { should have(34).elements }
       its(:data) { should include('Anthony Perkins (I)') }
       its(:data) { should include('Anthony Parkin') }
     end
+
     describe 'for unknown response' do
       subject { OracleOfBacon::Response.new(File.read 'spec/unknown.xml') }
+
       its(:type) { should == :unknown }
       its(:data) { should match /unknown/i }
     end
