@@ -91,13 +91,14 @@ describe OracleOfBacon do
     end
   end
 
-  describe 'constructing URI', :pending => true do
+  describe 'constructing URI' do
     subject do
       oob = OracleOfBacon.new('fake_key')
       oob.from = '3%2 "a' ; oob.to = 'George Clooney'
       oob.make_uri_from_arguments
       oob.uri
     end
+
     it { should match(URI::regexp) }
     it { should match /p=fake_key/ }
     it { should match /b=George\+Clooney/ }
@@ -109,12 +110,14 @@ describe OracleOfBacon do
       @oob = OracleOfBacon.new
       allow(@oob).to receive(:valid?).and_return(true)
     end
+
     it 'should create XML if valid response' do
       body = File.read 'spec/graph_example.xml'
       FakeWeb.register_uri(:get, %r(http://oracleofbacon\.org), :body => body)
       expect(OracleOfBacon::Response).to receive(:new).with(body)
       @oob.find_connections
     end
+
     it 'should raise OracleOfBacon::NetworkError if network problem' do
       FakeWeb.register_uri(:get, %r(http://oracleofbacon\.org),
         :exception => Timeout::Error)
